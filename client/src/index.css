@@ -1,0 +1,29 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bg-nav {
+  background-color: #e3f2fd;
+}
+
+.link {
+  font-size: 1.2rem;
+}
+
+.link:hover {
+  color: #e3f2fd;
+  background-color: #0d6efd;
+}
+
+svg:hover {
+  cursor: pointer;
+  transform: scale(0.7);
+}
+
+.edit {
+  color: green;
+}
+
+.delete {
+  color: red;
+}
