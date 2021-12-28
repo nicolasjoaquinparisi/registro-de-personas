@@ -12,19 +12,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import com.personas.server.entity.Job;
 import com.personas.server.entity.Person;
-import com.personas.server.repository.PersonReposity;
+import com.personas.server.repository.JobRepository;
+import com.personas.server.repository.PersonRepository;
+import com.personas.server.request.PersonRequest;
+import com.personas.server.error.PersonNotFoundException;
+import com.personas.server.entity.Job;
 
 @RestController
 @CrossOrigin
-public class IndexController {
+public class PersonController {
     
     @Autowired
-    private PersonReposity personReposity;
+    private PersonRepository personReposity;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @GetMapping("/persons")
     List<Person> all() {
       return personReposity.findAll();
+    }
+
+    @GetMapping("/persons/age/{age}")
+    List<Person> findByAge(@PathVariable Integer age) {
+      return personReposity.findByAge(age);
     }
 
     @GetMapping("/persons/{id}")
@@ -32,9 +45,14 @@ public class IndexController {
       return personReposity.findById(id)
         .orElseThrow(() -> new PersonNotFoundException(id));
     }
-    
+
     @PostMapping("/persons")
-    Person newPerson(@RequestBody Person newPerson) {
+    Person newPerson(@RequestBody PersonRequest newPersonRequest) {
+
+      System.out.println(newPersonRequest.getJobId());
+
+      Job job = jobRepository.findById(newPersonRequest.getJobId()).get();
+      Person newPerson = new Person(newPersonRequest, job);
       return personReposity.save(newPerson);
     }
 

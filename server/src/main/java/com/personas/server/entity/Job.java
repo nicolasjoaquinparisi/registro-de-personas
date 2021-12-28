@@ -1,10 +1,15 @@
 package com.personas.server.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,6 +25,9 @@ public class Job {
 
     @Column(name="description", nullable = false, length = 150)
     private String description;
+
+    @OneToMany(mappedBy="job")
+    private List<Person> persons = new ArrayList<Person>();
 
     Job() {}
 
@@ -37,7 +45,7 @@ public class Job {
     }
 
     public String getDescription() {
-        return this.name;
+        return this.description;
     }
 
     public void setId(Long id) {
