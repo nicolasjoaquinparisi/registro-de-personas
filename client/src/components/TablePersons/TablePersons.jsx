@@ -2,7 +2,7 @@ import Person from './Person';
 
 const TablePersons = ({persons}) => {
 
-    const columns = ["Apellido", "Nombre", "Edad", "Modificar", "Eliminar"];
+    const columns = ["Apellido", "Nombre", "Edad", "Empleo", "Modificar", "Eliminar"];
 
     return (
         <table className="table table-bordered table-sm table-hover shadow text-center w-50">
