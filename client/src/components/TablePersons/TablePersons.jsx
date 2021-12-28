@@ -1,8 +1,8 @@
 import Person from './Person';
 
-const Table = ({persons}) => {
+const TablePersons = ({persons}) => {
 
-    const columns = ["Apellido", "Nombre", "Edad", "Modificar", "Eliminar"]
+    const columns = ["Apellido", "Nombre", "Edad", "Modificar", "Eliminar"];
 
     return (
         <table className="table table-bordered table-sm table-hover shadow text-center w-50">
@@ -11,7 +11,7 @@ const Table = ({persons}) => {
                     {
                         Object.keys(columns).length > 0 ?
                             columns.map(column => (
-                                <th scope="col">{column}</th>
+                                <th scope="col" key={column}>{column}</th>
                             ))
                         :
                             null
@@ -35,4 +35,4 @@ const Table = ({persons}) => {
     );
 }
  
-export default Table;
+export default TablePersons;

@@ -27,3 +27,10 @@ svg:hover {
 .delete {
   color: red;
 }
+
+.link-button {
+  text-decoration: none;
+}
+.link-button:hover {
+  transform: scale(1.1);
+}

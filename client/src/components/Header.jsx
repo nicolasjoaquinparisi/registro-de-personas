@@ -2,8 +2,6 @@ import Nav from "./Nav";
 
 const Header = () => {
 
-    if (window.location.pathname !== '/' && window.location.pathname !== '/new-person') return null;
-
     return (
         <header className="mb-4">
             <div className="p-4 bg-primary">

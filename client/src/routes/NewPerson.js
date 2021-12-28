@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import axios from "axios";
 
 import { useParams } from 'react-router-dom';
 
+import { JobsContext } from '../context/JobsContext';
+
 const NewPerson = () => {
+
+    const { jobs } = useContext(JobsContext);
 
     const [person, setPerson] = useState({
         name: '',
         lastName: '',
-        age: ''
+        age: -1,
+        jobId: -1
     });
     const [error, setError] = useState(false);
 
@@ -33,14 +38,13 @@ const NewPerson = () => {
 
         if (id) sendFindPersonByIdRequest();
 
-    }, [id])
+    }, [id]);
     
     const getTitle = () => {
         return (id) ? `Editando a ${name} ${lastName}` : "Nueva persona";
     }
 
     const sendPostRequest = async() => {
-        console.log("POST...");
         try {
             const url = 'http://localhost:8080/persons';
             await axios.post(url, person);
@@ -48,7 +52,8 @@ const NewPerson = () => {
             setPerson({
                 name: '',
                 lastName: '',
-                age: ''
+                age: -1,
+                jobId: -1
             });
 
         }
@@ -58,7 +63,6 @@ const NewPerson = () => {
     }
 
     const sendPutRequest = async() => {
-        console.log("PUT...");
         try {
             const url = `http://localhost:8080/persons/${id}`;
             await axios.put(url, person);
@@ -136,6 +140,29 @@ const NewPerson = () => {
                         onChange={handleChange}
                         value={age}
                     />
+
+                    <div className="mt-4">
+                        <h5>Seleccione un empleo</h5>
+                        <div className="border rounded p-3">
+                            {
+                                jobs.map(job => (
+                                    <div className="form-check"
+                                        key={job.id}    
+                                    >
+                                        <input className="form-check-input"
+                                            type="radio"
+                                            name="job"
+                                            id={job.id}
+                                            onClick={()=> {setPerson({...person, jobId: job.id})}}
+                                        />
+                                        <label className="form-check-label" htmlFor={job.id}>
+                                            {job.name}
+                                        </label>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
 
                     <div className="d-flex justify-content-end">
                         <input

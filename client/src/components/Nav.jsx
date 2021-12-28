@@ -4,11 +4,8 @@ const Nav = () => {
     return (
         <nav className="navbar bg-nav navbar-expand-lg p-0 border-bottom">
             <div className="container d-flex justify-content-evenly">
-                <div className="">
-                    <Link className="nav-link link" to="/">Listar</Link>
-                </div>
-
-                <Link className="nav-link link" to="/new-person">Nueva persona</Link>
+                <Link className="nav-link link" to="/persons">Personas</Link>
+                <Link className="nav-link link" to="/jobs">Empleos</Link>
             </div>
         </nav>
     );

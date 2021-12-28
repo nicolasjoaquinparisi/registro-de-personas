@@ -2,9 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-import Header from './components/Header';
 import App from './App';
+import AppIndex from './routes/AppIndex';
+import Persons from './routes/Persons';
+import Jobs from './routes/Jobs';
 import NewPerson from './routes/NewPerson';
+import NewJob from './routes/NewJob';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -13,25 +16,33 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import JobsProvider from './context/JobsContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Header/>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="new-person" element={<NewPerson />} /> 
-        <Route path="edit-person/:id" element={<NewPerson />} /> 
-        <Route
-          path="*"
-          element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <JobsProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={ <AppIndex /> } />
+            <Route path="persons" element={<Persons />} />
+            <Route path="jobs" element={<Jobs /> } />
+            <Route path="new-person" element={<NewPerson />} />
+            <Route path="new-job" element={<NewJob />} /> 
+            <Route path="edit-person/:id" element={<NewPerson />} />
+          </Route>
+
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </JobsProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
