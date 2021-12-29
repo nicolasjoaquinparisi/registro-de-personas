@@ -1,9 +1,13 @@
+import { useContext } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import { PersonsContext } from '../../context/PersonsContext';
 
-const Person = ({person, setUpdate}) => {
+const Person = ({person}) => {
     
     const { id, name, lastName, age, job } = person;
+
+    const { setUpdate } = useContext(PersonsContext);
 
     const sendDeleteRequest = async() => {
         try {

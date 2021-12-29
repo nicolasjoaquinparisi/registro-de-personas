@@ -1,34 +1,11 @@
-import { useState, useEffect } from 'react';
-
-import TablePersons from '../components/TablePersons/TablePersons';
-
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-import axios from 'axios';
+import TablePersons from '../components/TablePersons/TablePersons';
+import { PersonsContext } from '../context/PersonsContext';
 
 const Persons = () => {
 
-  const [ update, setUpdate ] = useState(false);
-
-  useEffect(() => {
-
-    const sendRequest = async() => {
-      try {
-        const url = `http://localhost:8080/persons`;
-        const response = await axios.get(url);
-        
-        setPersons(response.data);
-        setUpdate(false);
-      }
-      catch (error) {
-        console.log(error);
-      }
-    }
-    sendRequest();
-  
-  }, [update]);
-
-  const [ persons, setPersons ] = useState([]);
+  const { persons } = useContext(PersonsContext);
 
   return (
     <div className="container">
@@ -39,10 +16,7 @@ const Persons = () => {
       <main className="mt-5 d-flex justify-content-center table-responsive-sm">
       {
           Object.keys(persons).length > 0 ?
-            <TablePersons
-              persons={persons}
-              setUpdate={setUpdate}
-            />
+            <TablePersons />
           :
             <p className="fs-5 text-secondary">Por el momento no hay personas dadas de alta.</p>
         }

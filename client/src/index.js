@@ -16,33 +16,30 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import JobsProvider from './context/JobsContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <JobsProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={ <AppIndex /> } />
-            <Route path="persons" element={<Persons />} />
-            <Route path="jobs" element={<Jobs /> } />
-            <Route path="new-person" element={<NewPerson />} />
-            <Route path="new-job" element={<NewJob />} /> 
-            <Route path="edit-person/:id" element={<NewPerson />} />
-          </Route>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={ <AppIndex /> } />
+          <Route path="persons" element={<Persons />} />
+          <Route path="jobs" element={<Jobs /> } />
+          <Route path="new-person" element={<NewPerson />} />
+          <Route path="new-job" element={<NewJob />} /> 
+          <Route path="edit-person/:id" element={<NewPerson />} />
+        </Route>
 
-          <Route
-            path="*"
-            element={
-              <main style={{ padding: "1rem" }}>
-                <p>There's nothing here!</p>
-              </main>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </JobsProvider>
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: "1rem" }}>
+              <p>There's nothing here!</p>
+            </main>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

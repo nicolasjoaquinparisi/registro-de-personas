@@ -1,35 +1,32 @@
+import { useContext } from 'react';
 import Person from './Person';
+import { PersonsContext } from '../../context/PersonsContext';
 
-const TablePersons = ({persons, setUpdate}) => {
+const TablePersons = () => {
 
     const columns = ["Apellido", "Nombre", "Edad", "Empleo", "Modificar", "Eliminar"];
+
+    const { persons } = useContext(PersonsContext);
 
     return (
         <table className="table table-bordered table-sm table-hover shadow text-center w-50">
             <thead className="table-primary">
                 <tr>
                     {
-                        Object.keys(columns).length > 0 ?
-                            columns.map(column => (
-                                <th scope="col" key={column}>{column}</th>
-                            ))
-                        :
-                            null
+                        columns.map(column => (
+                            <th scope="col" key={column}>{column}</th>
+                        ))
                     }
                 </tr>
             </thead>
             <tbody>
                 {
-                    Object.keys(persons).length > 0 ?
-                        persons.map(person => (
+                    persons.map(person => (
                         <Person
                             key={person.id}
                             person={person}
-                            setUpdate={setUpdate}
                         />
-                        ))
-                    :
-                        null
+                    ))
                 }
             </tbody>
         </table>

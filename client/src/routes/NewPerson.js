@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext } from "react";
-
 import axios from "axios";
-
 import { useParams } from 'react-router-dom';
-
 import { JobsContext } from '../context/JobsContext';
+import { PersonsContext } from '../context/PersonsContext';
 
 const NewPerson = () => {
 
     const { jobs } = useContext(JobsContext);
+    const { setUpdate } = useContext(PersonsContext);
 
     const [person, setPerson] = useState({
         name: '',
@@ -21,6 +20,8 @@ const NewPerson = () => {
 
     const { id } = useParams();
 
+    const [ loaded, setLoaded ] = useState(false);
+
     useEffect(() => {
         
         const sendFindPersonByIdRequest = async() => {
@@ -29,6 +30,7 @@ const NewPerson = () => {
                 const response = await axios.get(url);
                 
                 setPerson(response.data);
+                setLoaded(true);
             }
             catch (error) {
                 console.log(error);
@@ -38,6 +40,41 @@ const NewPerson = () => {
         if (id) sendFindPersonByIdRequest();
 
     }, [id]);
+
+    useEffect(() => {
+        
+        /*
+        Esta función se ejecuta cuando se va a modificar una persona
+        Lo que hace es reemplezar el objeto job, el cual contiene la información del job traído del servidor, por el id de ese job
+        En caso de que la persona tenga trabajo, caso contrario, le elimina esa propiedad
+        */
+       
+        if (loaded) {
+            if (id) {
+                if (person.job) {
+                    setPerson({...person, job: person.job.id});
+                }
+                else {
+                    setPerson({
+                        name: person.name,
+                        lastName: person.lastName,
+                        age: person.age
+                    })
+                }
+            }
+
+            setLoaded(false);
+        }
+
+    }, [loaded]);
+
+    const resetState = () => {
+        setPerson({
+            name: '',
+            lastName: '',
+            age: 0
+        });
+    }
     
     const getTitle = () => {
         return (id) ? `Editando a ${name} ${lastName}` : "Nueva persona";
@@ -48,11 +85,8 @@ const NewPerson = () => {
             const url = 'http://localhost:8080/persons';
             await axios.post(url, person);
 
-            setPerson({
-                name: '',
-                lastName: '',
-                age: 0
-            });
+            resetState();
+            setUpdate(true);
 
         }
         catch (error) {
@@ -65,11 +99,7 @@ const NewPerson = () => {
             const url = `http://localhost:8080/persons/${id}`;
             await axios.put(url, person);
 
-            setPerson({
-                name: '',
-                lastName: '',
-                age: 0
-            });
+            resetState();
         }
         catch (error) {
             console.log(error);
@@ -88,17 +118,7 @@ const NewPerson = () => {
         setError(false);
 
         if (id) {
-            
-            setPerson({...person, ["age"]:age.toString()});
-
-            if (person.job === null) {
-                setPerson({
-                    name: '',
-                    lastName: '',
-                    age: 0
-                });
-            }
-
+            if (person.job === null) resetState();
             sendPutRequest();
         }
         else {
@@ -110,6 +130,13 @@ const NewPerson = () => {
         setPerson({
             ...person, 
             [e.target.name]: e.target.value});
+    }
+
+    const getCheckedJob = jobId => {
+        if (person.job) {
+            return (person.job.id === jobId) ? true : false;
+        }
+        return false;
     }
 
     return (
@@ -155,7 +182,7 @@ const NewPerson = () => {
                         className="form-control"
                         placeholder="Ingrese la edad de la persona"
                         onChange={handleChange}
-                        value={ (age <= 0) ? null : age }
+                        value={ (age <= 0) ? "" : age }
                     />
 
                     <div className="mt-4">
@@ -171,6 +198,7 @@ const NewPerson = () => {
                                                 type="radio"
                                                 name="job"
                                                 id={job.id}
+                                                defaultChecked={getCheckedJob(job.id)}
                                                 onClick={()=> {setPerson({...person, jobId: job.id})}}
                                             />
                                             <label className="form-check-label" htmlFor={job.id}>
