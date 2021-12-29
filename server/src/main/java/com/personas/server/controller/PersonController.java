@@ -49,9 +49,12 @@ public class PersonController {
     @PostMapping("/persons")
     Person newPerson(@RequestBody PersonRequest newPersonRequest) {
 
-      System.out.println(newPersonRequest.getJobId());
+      Job job = null;
 
-      Job job = jobRepository.findById(newPersonRequest.getJobId()).get();
+      if (newPersonRequest.getJobId() != null) {
+        job = jobRepository.findById(newPersonRequest.getJobId()).get();
+      }
+
       Person newPerson = new Person(newPersonRequest, job);
       return personReposity.save(newPerson);
     }

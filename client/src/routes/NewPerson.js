@@ -13,8 +13,7 @@ const NewPerson = () => {
     const [person, setPerson] = useState({
         name: '',
         lastName: '',
-        age: -1,
-        jobId: -1
+        age: 0
     });
     const [error, setError] = useState(false);
 
@@ -52,8 +51,7 @@ const NewPerson = () => {
             setPerson({
                 name: '',
                 lastName: '',
-                age: -1,
-                jobId: -1
+                age: 0
             });
 
         }
@@ -133,33 +131,36 @@ const NewPerson = () => {
                     <label className="form-label mt-3" htmlFor="age">Edad</label>
                     <input
                         id="age"
-                        type="text"
+                        type="number"
                         name="age"
                         className="form-control"
                         placeholder="Ingrese la edad de la persona"
                         onChange={handleChange}
-                        value={age}
+                        value={ (age <= 0) ? null : age }
                     />
 
                     <div className="mt-4">
                         <h5>Seleccione un empleo</h5>
                         <div className="border rounded p-3">
                             {
-                                jobs.map(job => (
-                                    <div className="form-check"
-                                        key={job.id}    
-                                    >
-                                        <input className="form-check-input"
-                                            type="radio"
-                                            name="job"
-                                            id={job.id}
-                                            onClick={()=> {setPerson({...person, jobId: job.id})}}
-                                        />
-                                        <label className="form-check-label" htmlFor={job.id}>
-                                            {job.name}
-                                        </label>
-                                    </div>
-                                ))
+                                (Object.keys(jobs).length > 0) ?
+                                    jobs.map(job => (
+                                        <div className="form-check"
+                                            key={job.id}    
+                                        >
+                                            <input className="form-check-input"
+                                                type="radio"
+                                                name="job"
+                                                id={job.id}
+                                                onClick={()=> {setPerson({...person, jobId: job.id})}}
+                                            />
+                                            <label className="form-check-label" htmlFor={job.id}>
+                                                {job.name}
+                                            </label>
+                                        </div>
+                                    ))
+                                :
+                                    <p>Por el momento no hay empleos dados de alta.</p>
                             }
                         </div>
                     </div>
