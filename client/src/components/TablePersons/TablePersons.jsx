@@ -1,6 +1,6 @@
 import Person from './Person';
 
-const TablePersons = ({persons}) => {
+const TablePersons = ({persons, setUpdate}) => {
 
     const columns = ["Apellido", "Nombre", "Edad", "Empleo", "Modificar", "Eliminar"];
 
@@ -25,6 +25,7 @@ const TablePersons = ({persons}) => {
                         <Person
                             key={person.id}
                             person={person}
+                            setUpdate={setUpdate}
                         />
                         ))
                     :

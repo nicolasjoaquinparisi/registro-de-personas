@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { JobsContext } from "../context/JobsContext";
 
 import axios from "axios";
 
 const NewJob = () => {
+
+    const { setUpdate } = useContext(JobsContext);
 
     const [job, setJob] = useState({
         name: '',
@@ -25,6 +28,8 @@ const NewJob = () => {
                 name: '',
                 description: ''
             });
+
+            setUpdate(true);
 
         }
         catch (error) {

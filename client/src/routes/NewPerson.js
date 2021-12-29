@@ -64,6 +64,12 @@ const NewPerson = () => {
         try {
             const url = `http://localhost:8080/persons/${id}`;
             await axios.put(url, person);
+
+            setPerson({
+                name: '',
+                lastName: '',
+                age: 0
+            });
         }
         catch (error) {
             console.log(error);
@@ -81,10 +87,23 @@ const NewPerson = () => {
         
         setError(false);
 
-        if (id)
+        if (id) {
+            
+            setPerson({...person, ["age"]:age.toString()});
+
+            if (person.job === null) {
+                setPerson({
+                    name: '',
+                    lastName: '',
+                    age: 0
+                });
+            }
+
             sendPutRequest();
-        else
+        }
+        else {
             sendPostRequest();
+        }
     }
 
     const handleChange = e => {

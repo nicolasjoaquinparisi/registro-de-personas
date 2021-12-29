@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Link } from 'react-router-dom';
 
-const Person = ({person}) => {
+const Person = ({person, setUpdate}) => {
     
     const { id, name, lastName, age, job } = person;
 
@@ -9,6 +9,8 @@ const Person = ({person}) => {
         try {
             const url = `http://localhost:8080/persons/${id}`;
             await axios.delete(url, id);
+
+            setUpdate(true);
         }
         catch (error) {
             console.log(error);

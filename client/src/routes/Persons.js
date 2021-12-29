@@ -8,6 +8,8 @@ import axios from 'axios';
 
 const Persons = () => {
 
+  const [ update, setUpdate ] = useState(false);
+
   useEffect(() => {
 
     const sendRequest = async() => {
@@ -16,6 +18,7 @@ const Persons = () => {
         const response = await axios.get(url);
         
         setPersons(response.data);
+        setUpdate(false);
       }
       catch (error) {
         console.log(error);
@@ -23,7 +26,7 @@ const Persons = () => {
     }
     sendRequest();
   
-  }, []);
+  }, [update]);
 
   const [ persons, setPersons ] = useState([]);
 
@@ -38,6 +41,7 @@ const Persons = () => {
           Object.keys(persons).length > 0 ?
             <TablePersons
               persons={persons}
+              setUpdate={setUpdate}
             />
           :
             <p className="fs-5 text-secondary">Por el momento no hay personas dadas de alta.</p>
