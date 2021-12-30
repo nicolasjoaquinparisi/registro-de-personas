@@ -22,8 +22,21 @@ const NewPerson = () => {
 
     const [ loaded, setLoaded ] = useState(false);
 
+    const resetStateWithAttributesExceptJob = () => {
+        setPerson({
+            name: person.name,
+            lastName: person.lastName,
+            age: person.age
+        });
+    }
+
     useEffect(() => {
         
+        /*
+        Función que se ejecuta cuando se va a modificar una persona
+        Se recibe el id de la persona por parámetro y luego se hace una petición al servidor con el id, luego, se setean los datos al state
+        */
+
         const sendFindPersonByIdRequest = async() => {
             try {
                 const url = `http://localhost:8080/persons/${id}`;
@@ -55,11 +68,7 @@ const NewPerson = () => {
                     setPerson({...person, job: person.job.id});
                 }
                 else {
-                    setPerson({
-                        name: person.name,
-                        lastName: person.lastName,
-                        age: person.age
-                    })
+                    resetStateWithAttributesExceptJob();
                 }
             }
 
@@ -117,6 +126,8 @@ const NewPerson = () => {
         
         setError(false);
 
+        if (person.jobId && person.job === -1) resetStateWithAttributesExceptJob();
+
         if (id) {
             if (person.job === null) resetState();
             sendPutRequest();
@@ -130,13 +141,6 @@ const NewPerson = () => {
         setPerson({
             ...person, 
             [e.target.name]: e.target.value});
-    }
-
-    const getCheckedJob = jobId => {
-        if (person.job) {
-            return (person.job.id === jobId) ? true : false;
-        }
-        return false;
     }
 
     return (
@@ -187,29 +191,23 @@ const NewPerson = () => {
 
                     <div className="mt-4">
                         <h5>Seleccione un empleo</h5>
-                        <div className="border rounded p-3">
+
+                        <select
+                            className="form-select w-100"
+                            onChange={e => setPerson({...person, jobId: e.target.value}) }
+                        >
+                            <option value="-1">Ninguno</option>
                             {
-                                (Object.keys(jobs).length > 0) ?
-                                    jobs.map(job => (
-                                        <div className="form-check"
-                                            key={job.id}    
-                                        >
-                                            <input className="form-check-input"
-                                                type="radio"
-                                                name="job"
-                                                id={job.id}
-                                                defaultChecked={getCheckedJob(job.id)}
-                                                onClick={()=> {setPerson({...person, jobId: job.id})}}
-                                            />
-                                            <label className="form-check-label" htmlFor={job.id}>
-                                                {job.name}
-                                            </label>
-                                        </div>
-                                    ))
-                                :
-                                    <p>Por el momento no hay empleos dados de alta.</p>
+                                jobs.map(job => (
+                                    <option
+                                        key={job.id}
+                                        value={job.id}
+                                    >
+                                        {job.name}
+                                    </option>
+                                ))
                             }
-                        </div>
+                        </select>
                     </div>
 
                     <div className="d-flex justify-content-end">
