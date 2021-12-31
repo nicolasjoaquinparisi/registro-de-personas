@@ -3,32 +3,22 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { JobsContext } from '../context/JobsContext';
 import { PersonsContext } from '../context/PersonsContext';
+import Select from "../components/Select/Select";
+import usePerson from "../hooks/usePerson";
 
 const NewPerson = () => {
 
     const { jobs } = useContext(JobsContext);
     const { setUpdate } = useContext(PersonsContext);
 
-    const [person, setPerson] = useState({
-        name: '',
-        lastName: '',
-        age: 0
-    });
-    const [error, setError] = useState(false);
-
-    const { name, lastName, age } = person;
-
     const { id } = useParams();
+
+    const [error, setError] = useState(false);
 
     const [ loaded, setLoaded ] = useState(false);
 
-    const resetStateWithAttributesExceptJob = () => {
-        setPerson({
-            name: person.name,
-            lastName: person.lastName,
-            age: person.age
-        });
-    }
+    const [ person, setPerson, resetStateWithAttributesExceptJob, resetState ] = usePerson();
+    const { name, lastName, age } = person;
 
     useEffect(() => {
         
@@ -52,7 +42,7 @@ const NewPerson = () => {
 
         if (id) sendFindPersonByIdRequest();
 
-    }, [id]);
+    }, []);
 
     useEffect(() => {
         
@@ -75,15 +65,7 @@ const NewPerson = () => {
             setLoaded(false);
         }
 
-    }, [loaded]);
-
-    const resetState = () => {
-        setPerson({
-            name: '',
-            lastName: '',
-            age: 0
-        });
-    }
+    }, []);
     
     const getTitle = () => {
         return (id) ? `Editando a ${name} ${lastName}` : "Nueva persona";
@@ -91,6 +73,8 @@ const NewPerson = () => {
 
     const sendPostRequest = async() => {
         try {
+            console.table(person);
+            
             const url = 'http://localhost:8080/persons';
             await axios.post(url, person);
 
@@ -105,10 +89,13 @@ const NewPerson = () => {
 
     const sendPutRequest = async() => {
         try {
+            console.table(person);
+            
             const url = `http://localhost:8080/persons/${id}`;
             await axios.put(url, person);
 
             resetState();
+            setUpdate(true);
         }
         catch (error) {
             console.log(error);
@@ -119,14 +106,15 @@ const NewPerson = () => {
 
         e.preventDefault();
 
-        if (name.trim() === '' || lastName.trim() === '' || age.trim() <= 0) {
+        if (name.trim() === '' || lastName.trim() === '' || age <= 0) {
             setError(true);
             return;
         }
         
         setError(false);
 
-        if (person.jobId && person.job === -1) resetStateWithAttributesExceptJob();
+        // Se elimina el atributo job de la persona en caso de que no haya seleccionado un trabajo
+        if (!person.job) resetStateWithAttributesExceptJob();
 
         if (id) {
             if (person.job === null) resetState();
@@ -192,22 +180,11 @@ const NewPerson = () => {
                     <div className="mt-4">
                         <h5>Seleccione un empleo</h5>
 
-                        <select
-                            className="form-select w-100"
-                            onChange={e => setPerson({...person, jobId: e.target.value}) }
-                        >
-                            <option value="-1">Ninguno</option>
-                            {
-                                jobs.map(job => (
-                                    <option
-                                        key={job.id}
-                                        value={job.id}
-                                    >
-                                        {job.name}
-                                    </option>
-                                ))
-                            }
-                        </select>
+                        <Select
+                            person={person}
+                            jobs={jobs}
+                            setPerson={setPerson}
+                        />
                     </div>
 
                     <div className="d-flex justify-content-end">
