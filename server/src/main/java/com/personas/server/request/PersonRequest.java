@@ -4,7 +4,7 @@ public class PersonRequest {
     private String name;
     private String lastName;
     private Integer age;
-    private Long jobId;
+    private Long job;
 
     public String getName() {
         return this.name;
@@ -18,8 +18,8 @@ public class PersonRequest {
         return this.age;
     }
 
-    public Long getJobId() {
-        return this.jobId;
+    public Long getJob() {
+        return this.job;
     }
 
     public void setName(String name) {
@@ -34,7 +34,7 @@ public class PersonRequest {
         this.age = age;
     }
 
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
+    public void setJob(Long job) {
+        this.job = job;
     }
 }

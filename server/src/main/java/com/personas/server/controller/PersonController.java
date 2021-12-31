@@ -51,8 +51,8 @@ public class PersonController {
 
       Job job = null;
 
-      if (newPersonRequest.getJobId() != null) {
-        job = jobRepository.findById(newPersonRequest.getJobId()).get();
+      if (newPersonRequest.getJob() != -1L) {
+        job = jobRepository.findById(newPersonRequest.getJob()).get();
       }
 
       Person newPerson = new Person(newPersonRequest, job);
@@ -60,16 +60,35 @@ public class PersonController {
     }
 
     @PutMapping("/persons/{id}")
-    Person replacePerson(@RequestBody Person newPerson, @PathVariable Long id) {
+    Person replacePerson(@RequestBody PersonRequest newPersonRequest, @PathVariable Long id) {
       return personReposity.findById(id)
         .map(person -> {
-          person.setName(newPerson.getName());
-          person.setLastName(newPerson.getLastName());
-          person.setAge(newPerson.getAge());
+          person.setName(newPersonRequest.getName());
+          person.setLastName(newPersonRequest.getLastName());
+          person.setAge(newPersonRequest.getAge());
+          
+          Job job;
+          if (newPersonRequest.getJob() != -1L) {
+            job = jobRepository.findById(newPersonRequest.getJob()).get();
+            person.setJob(job);
+          } else {
+            person.setJob(null);
+          }
+
           return personReposity.save(person);
         })
         .orElseGet(() -> {
+          Person newPerson = newPerson(newPersonRequest);
           newPerson.setId(id);
+
+          Job job;
+          if (newPersonRequest.getJob() != -1L) {
+            job = jobRepository.findById(newPersonRequest.getJob()).get();
+            newPerson.setJob(job);
+          } else {
+            newPerson.setJob(null);
+          }
+
           return personReposity.save(newPerson);
         });
     }
