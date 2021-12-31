@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { JobsContext } from '../context/JobsContext';
 import { PersonsContext } from '../context/PersonsContext';
 import Select from "../components/Select/Select";
+import Message from "../components/Message";
 import usePerson from "../hooks/usePerson";
 
 const NewPerson = () => {
@@ -13,12 +14,17 @@ const NewPerson = () => {
 
     const { id } = useParams();
 
-    const [error, setError] = useState(false);
+    const [ error, setError ] = useState(false);
 
     const [ loaded, setLoaded ] = useState(false);
 
+    // usePerson
     const [ person, setPerson, resetStateWithAttributesExceptJob, resetState ] = usePerson();
     const { name, lastName, age } = person;
+
+    const [ status, setStatus ] = useState(0);
+    const [ type, setType ] = useState('none');
+    const [ showMessage, setShowMessage ] = useState(false);
 
     useEffect(() => {
         
@@ -73,10 +79,12 @@ const NewPerson = () => {
 
     const sendPostRequest = async() => {
         try {
-            console.table(person);
-            
             const url = 'http://localhost:8080/persons';
-            await axios.post(url, person);
+            const response = await axios.post(url, person);
+            
+            setStatus(response.status);
+            setType('post');
+            setShowMessage(true);
 
             resetState();
             setUpdate(true);
@@ -88,11 +96,13 @@ const NewPerson = () => {
     }
 
     const sendPutRequest = async() => {
-        try {
-            console.table(person);
-            
+        try {            
             const url = `http://localhost:8080/persons/${id}`;
-            await axios.put(url, person);
+            const response = await axios.put(url, person);
+
+            setStatus(response.status);
+            setType('put');
+            setShowMessage(true);
 
             resetState();
             setUpdate(true);
@@ -141,6 +151,17 @@ const NewPerson = () => {
             </div>
             :
             null}
+
+            {
+                (showMessage) ?
+                <Message
+                    type={type}
+                    status={status}
+                    setShowMessage={setShowMessage}
+                />
+                :
+                null
+            }
 
             <div className="d-flex justify-content-center">
                 <form className="border p-3 rounded w-50 shadow">
