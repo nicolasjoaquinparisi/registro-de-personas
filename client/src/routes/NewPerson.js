@@ -26,6 +26,9 @@ const NewPerson = () => {
     const [ type, setType ] = useState('none');
     const [ showMessage, setShowMessage ] = useState(false);
 
+    // Used when on editing
+    const [ personName, setPersonName ] = useState('');
+
     useEffect(() => {
         
         /*
@@ -47,7 +50,7 @@ const NewPerson = () => {
         }
 
         if (id) sendFindPersonByIdRequest();
-
+        
     }, []);
 
     useEffect(() => {
@@ -72,10 +75,12 @@ const NewPerson = () => {
         }
 
     }, []);
-    
-    const getTitle = () => {
-        return (id) ? `Editando a ${name} ${lastName}` : "Nueva persona";
-    }
+
+    useEffect(() => {
+        if (loaded) {
+            setPersonName(`${name} ${lastName}`);
+        }
+    }, [loaded]);
 
     const sendPostRequest = async() => {
         try {
@@ -143,7 +148,7 @@ const NewPerson = () => {
 
     return (
         <div className="container"> 
-            <h3 className="text-secondary text-center mb-4">{getTitle()}</h3>
+            <h3 className="text-secondary text-center mb-4">{(id)? `Editando a ${personName}` : "Nueva persona"}</h3>
 
             {(error) ? 
             <div className="d-flex justify-content-center">

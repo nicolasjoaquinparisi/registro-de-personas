@@ -20,6 +20,7 @@ const NewJob = () => {
     // Edit
     const { id } = useParams();
     const [ loaded, setLoaded ] = useState(false);
+    const [ jobName, setJobName ] = useState('');
 
     useEffect(() => {
 
@@ -39,10 +40,12 @@ const NewJob = () => {
         if (id) sendFindJobByIdRequest();
 
     }, []);
-    
-    const getTitle = () => {
-        return (id) ? `Editando el empleo '${name}'` : "Nuevo empleo";
-    }
+
+    useEffect(() => {
+        if (loaded) {
+            setJobName(`${name}`);
+        }
+    }, [loaded]);
 
     const resetState = () => {
         setJob({
@@ -105,7 +108,7 @@ const NewJob = () => {
 
     return (
         <div className="container"> 
-            <h3 className="text-secondary text-center mb-4">{getTitle()}</h3>
+            <h3 className="text-secondary text-center mb-4">{(id) ? `Editando el empleo '${jobName}'` : "Nuevo empleo"}</h3>
 
             {(error) ? 
             <div className="d-flex justify-content-center">

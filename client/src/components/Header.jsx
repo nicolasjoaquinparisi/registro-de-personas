@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Nav from "./Nav";
 
 const Header = () => {
@@ -6,7 +7,7 @@ const Header = () => {
         <header className="mb-4">
             <div className="p-4 bg-primary">
                 <div className="container">
-                    <h1 className="text-white">Registro de Personas</h1>
+                    <Link to="/" id="header" className="text-decoration-none fs-1">Registro de Personas</Link>
                 </div>
             </div>
             <Nav />

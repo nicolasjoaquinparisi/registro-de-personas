@@ -2,6 +2,13 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
+#header {
+  color: white;
+}
+#header:hover {
+  color: lightgray;
+}
+
 .bg-nav {
   background-color: #e3f2fd;
 }
