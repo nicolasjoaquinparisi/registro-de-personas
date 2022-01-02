@@ -7,7 +7,7 @@ export const PersonsContext = createContext();
 const PersonsProvider = (props) => {
 
     const [ persons, setPersons ] = useState([]);
-    const [ update, setUpdate ] = useState(false);
+    const [ updatePersons, setUpdatePersons ] = useState(false);
 
     useEffect(() => {
 
@@ -17,7 +17,7 @@ const PersonsProvider = (props) => {
             const response = await axios.get(url);
             
             setPersons(response.data);
-            setUpdate(false);
+            setUpdatePersons(false);
           }
           catch (error) {
             console.log(error);
@@ -25,13 +25,13 @@ const PersonsProvider = (props) => {
         }
         sendRequest();
       
-      }, [update]);
+      }, [updatePersons]);
 
     return (
         <PersonsContext.Provider
             value={{
                 persons,
-                setUpdate
+                setUpdatePersons
             }}
         >
             {props.children}

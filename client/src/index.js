@@ -28,6 +28,7 @@ ReactDOM.render(
           <Route path="new-person" element={<NewPerson />} />
           <Route path="new-job" element={<NewJob />} /> 
           <Route path="edit-person/:id" element={<NewPerson />} />
+          <Route path="edit-job/:id" element={<NewJob />} />
         </Route>
 
         <Route

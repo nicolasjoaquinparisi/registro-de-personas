@@ -7,7 +7,7 @@ export const JobsContext = createContext();
 const JobsProvider = (props) => {
 
     const [ jobs, setItems ] = useState([]);
-    const [ update, setUpdate ] = useState(false);
+    const [ updateJobs, setUpdateJobs ] = useState(false);
 
     useEffect(() => {
 
@@ -22,17 +22,17 @@ const JobsProvider = (props) => {
                 console.log(error);
             }
             
-            setUpdate(false);
+            setUpdateJobs(false);
         }
         sendRequest();
     
-    }, [update]);
+    }, [updateJobs]);
 
     return (
         <JobsContext.Provider
             value={{
                 jobs,
-                setUpdate
+                setUpdateJobs
             }}
         >
             {props.children}

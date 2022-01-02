@@ -10,7 +10,7 @@ import usePerson from "../hooks/usePerson";
 const NewPerson = () => {
 
     const { jobs } = useContext(JobsContext);
-    const { setUpdate } = useContext(PersonsContext);
+    const { setUpdatePersons } = useContext(PersonsContext);
 
     const { id } = useParams();
 
@@ -87,7 +87,7 @@ const NewPerson = () => {
             setShowMessage(true);
 
             resetState();
-            setUpdate(true);
+            setUpdatePersons(true);
 
         }
         catch (error) {
@@ -105,7 +105,7 @@ const NewPerson = () => {
             setShowMessage(true);
 
             resetState();
-            setUpdate(true);
+            setUpdatePersons(true);
         }
         catch (error) {
             console.log(error);

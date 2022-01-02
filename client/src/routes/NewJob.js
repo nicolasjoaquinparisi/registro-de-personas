@@ -1,11 +1,13 @@
-import { useState, useContext } from "react";
-import { JobsContext } from "../context/JobsContext";
-
+import { useState, useEffect, useContext } from "react";
+import { useParams } from 'react-router-dom';
 import axios from "axios";
+import { JobsContext } from "../context/JobsContext";
+import { PersonsContext } from "../context/PersonsContext";
 
 const NewJob = () => {
 
-    const { setUpdate } = useContext(JobsContext);
+    const { setUpdateJobs } = useContext(JobsContext);
+    const { setUpdatePersons } = useContext(PersonsContext);
 
     const [job, setJob] = useState({
         name: '',
@@ -14,9 +16,39 @@ const NewJob = () => {
     const [error, setError] = useState(false);
 
     const { name, description } = job;
+
+    // Edit
+    const { id } = useParams();
+    const [ loaded, setLoaded ] = useState(false);
+
+    useEffect(() => {
+
+        const sendFindJobByIdRequest = async() => {
+            try {
+                const url = `http://localhost:8080/jobs/${id}`;
+                const response = await axios.get(url);
+                
+                setJob(response.data);
+                setLoaded(true);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (id) sendFindJobByIdRequest();
+
+    }, []);
     
     const getTitle = () => {
-        return "Nuevo empleo";
+        return (id) ? `Editando el empleo '${name}'` : "Nuevo empleo";
+    }
+
+    const resetState = () => {
+        setJob({
+            name: '',
+            description: ''
+        });
     }
 
     const sendPostRequest = async() => {
@@ -24,13 +56,23 @@ const NewJob = () => {
             const url = 'http://localhost:8080/jobs';
             await axios.post(url, job);
 
-            setJob({
-                name: '',
-                description: ''
-            });
+            resetState();
+            setUpdateJobs(true);
 
-            setUpdate(true);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
+    const sendPutRequest = async() => {
+        try {
+            const url = `http://localhost:8080/jobs/${id}`;
+            await axios.put(url, job);
+
+            resetState();
+            setUpdateJobs(true);
+            setUpdatePersons(true);
         }
         catch (error) {
             console.log(error);
@@ -48,7 +90,11 @@ const NewJob = () => {
         
         setError(false);
 
-        sendPostRequest();
+        if (id) {
+            sendPutRequest()
+        } else {
+            sendPostRequest();
+        }
     }
 
     const handleChange = e => {

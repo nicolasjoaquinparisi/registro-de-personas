@@ -39,6 +39,21 @@ public class JobController {
       return jobRepository.save(newJob);
     }
 
+    @PutMapping("/jobs/{id}")
+    Job replaceJob(@RequestBody Job newJob, @PathVariable Long id) {
+      
+      return jobRepository.findById(id)
+        .map(job -> {
+          job.setName(newJob.getName());
+          job.setDescription(newJob.getDescription());
+          return jobRepository.save(job);
+        })
+        .orElseGet(() -> {
+          newJob.setId(id);
+          return jobRepository.save(newJob);
+        });
+    }
+
     @DeleteMapping("/jobs/{id}")
     void deleteJob(@PathVariable Long id) {
       jobRepository.deleteById(id);
